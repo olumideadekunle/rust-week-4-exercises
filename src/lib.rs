@@ -133,16 +133,20 @@ pub fn parse_cli_args(args: &[String]) -> Result<CliCommand, BitcoinError> {
         "balance" => Ok(CliCommand::Balance),
         "send" => {
             if args.len() < 3 {
-                return Err(BitcoinError::ParseError("Missing arguments for send command".to_string()));
+                return Err(BitcoinError::ParseError(
+                    "Missing arguments for send command".to_string(),
+                ));
             }
-            
+
             let amount = args[1]
                 .parse::<u64>()
                 .map_err(|e| BitcoinError::ParseError(e.to_string()))?;
             let address = args[2].clone();
             Ok(CliCommand::Send { amount, address })
         }
-        _ => Err(BitcoinError::ParseError("Unknown or invalid CLI command parameter".to_string())),
+        _ => Err(BitcoinError::ParseError(
+            "Unknown or invalid CLI command parameter".to_string(),
+        )),
     }
 }
 
@@ -167,14 +171,14 @@ impl TryFrom<&[u8]> for LegacyTransaction {
                 .try_into()
                 .map_err(|_| BitcoinError::InvalidTransaction)?,
         );
-        
+
         // Parse inputs count as a 4-byte u32
         let inputs_count = u32::from_le_bytes(
             data[4..8]
                 .try_into()
                 .map_err(|_| BitcoinError::InvalidTransaction)?,
         ) as usize;
-        
+
         // Parse outputs count as a 4-byte u32
         let outputs_count = u32::from_le_bytes(
             data[8..12]
