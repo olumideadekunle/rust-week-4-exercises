@@ -190,7 +190,7 @@ impl TryFrom<&[u8]> for LegacyTransaction {
 
         Ok(LegacyTransaction {
             version,
-            inputs: Vec::with_with_capacity(inputs_count),
+            inputs: Vec::with_capacity(inputs_count),
             outputs: Vec::with_capacity(outputs_count),
             lock_time,
         })
