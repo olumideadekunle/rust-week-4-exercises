@@ -1,4 +1,3 @@
-use std::str::FromStr;
 use thiserror::Error;
 
 // Custom errors for Bitcoin operations
@@ -161,7 +160,6 @@ impl TryFrom<&[u8]> for LegacyTransaction {
     type Error = BitcoinError;
 
     fn try_from(data: &[u8]) -> Result<Self, Self::Error> {
-        // The test data arrays are exactly 16 bytes long
         if data.len() < 16 {
             return Err(BitcoinError::InvalidTransaction);
         }
@@ -172,14 +170,12 @@ impl TryFrom<&[u8]> for LegacyTransaction {
                 .map_err(|_| BitcoinError::InvalidTransaction)?,
         );
 
-        // Parse inputs count as a 4-byte u32
         let inputs_count = u32::from_le_bytes(
             data[4..8]
                 .try_into()
                 .map_err(|_| BitcoinError::InvalidTransaction)?,
         ) as usize;
 
-        // Parse outputs count as a 4-byte u32
         let outputs_count = u32::from_le_bytes(
             data[8..12]
                 .try_into()
@@ -192,10 +188,9 @@ impl TryFrom<&[u8]> for LegacyTransaction {
                 .map_err(|_| BitcoinError::InvalidTransaction)?,
         );
 
-        // Allocate empty vectors with the exact capacity required by the test assertions!
         Ok(LegacyTransaction {
             version,
-            inputs: Vec::with_capacity(inputs_count),
+            inputs: Vec::with_with_capacity(inputs_count),
             outputs: Vec::with_capacity(outputs_count),
             lock_time,
         })
